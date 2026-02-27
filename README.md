@@ -21,8 +21,8 @@ Make sure you have the following installed:
 ### 2️⃣ Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/forge-ai.git
-cd forge-ai
+git clone https://github.com/sriram32134/aicte-batch-7-AI-resume-generator.git
+cd aicte-batch-7-AI-resume-generator
 ```
 
 ---
