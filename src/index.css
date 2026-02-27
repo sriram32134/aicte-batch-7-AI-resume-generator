@@ -6,6 +6,8 @@
   background-color: #f3f4f6;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  margin:0;
+  padding: 0;
 }
 
 *,
@@ -16,8 +18,9 @@
 
 body {
   margin: 0;
-  min-height: 100vh;
-  background: radial-gradient(circle at top left, #e5f2ff, #f9fafb 60%);
+  padding: 0;
+  overflow-x: hidden; /* Prevents unwanted horizontal scrolling */
+  width: 100vw;
 }
 
 #root {
@@ -25,10 +28,12 @@ body {
 }
 
 .page-root {
-  max-width: 1240px;
-  margin: 0 auto;
-  padding: 24px 16px 40px;
+  width: 100%;
+  max-width: 100vw; /* Remove the 1240px limit */
+  margin: 0;
+  padding: 24px 40px; /* More generous side padding for wide screens */
   color: #111827;
+  overflow-x: hidden;
 }
 
 .top-bar {
@@ -583,8 +588,10 @@ body {
 }
 
 .home-root {
-  max-width: 980px;
-  margin: 40px auto 0;
+  width: 100%;
+  max-width: 100vw; /* Remove the 980px limit */
+  margin: 0;
+  padding: 0;
 }
 
 .home-hero h1 {
@@ -656,8 +663,12 @@ body {
 
 @media (max-width: 960px) {
   .layout {
-    grid-template-columns: 1fr;
-  }
+  display: grid;
+  grid-template-columns: 1fr 1.2fr; /* Adjusted for better balance on wide screens */
+  gap: 30px;
+  width: 100%;
+  padding: 0 20px;
+}
 
   .form-panel {
     order: 2;
@@ -682,3 +693,4 @@ body {
     padding-inline: 10px;
   }
 }
+

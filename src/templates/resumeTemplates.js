@@ -30,14 +30,6 @@ export const resumeTemplates = [
     description: "Best when you have many AIML projects and case‑studies.",
     accent: "#ec4899",
     layout: "two-column",
-  },
-  {
-    id: 6,
-    key: "research-academic",
-    name: "Research / Academic",
-    description: "Good for research internships, labs, and publications.",
-    accent: "#0891b2",
-    layout: "one-column",
   }
 ];
 

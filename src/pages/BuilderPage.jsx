@@ -60,7 +60,8 @@ export function BuilderPage() {
       linkedin: "",
       github: "",
       portfolio: "",
-      profileImage: null, // Added to track the profile picture
+      profileImage: null,
+      resumeLink: "" // Added to track the profile picture
     },
     summary: "",
     technicalSkills: "",
@@ -193,45 +194,57 @@ export function BuilderPage() {
     }
   };
 
+  
+
   const downloadAsPdf = async (ref, fileName, kind) => {
-    if (!ref.current) return;
-    const element = ref.current;
-    const canvas = await html2canvas(element, { scale: 2 });
-    const imgData = canvas.toDataURL("image/png");
+  if (!ref.current) return;
+  const element = ref.current;
 
-    const pdf = new jsPDF("p", "pt", "a4");
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-    const imgWidth = pageWidth;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  // Use a higher scale for better clarity and ensure background colors are captured
+  const canvas = await html2canvas(element, { 
+    scale: 2,
+    useCORS: true,
+    backgroundColor: "#ffffff" 
+  });
+  
+  const imgData = canvas.toDataURL("image/png");
+  const pdf = new jsPDF("p", "pt", "a4");
+  
+  const pdfWidth = pdf.internal.pageSize.getWidth();
+  const pdfHeight = pdf.internal.pageSize.getHeight();
+  
+  // Calculate image height based on the PDF width to maintain aspect ratio
+  const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+  
+  let heightLeft = imgHeight;
+  let position = 0;
 
-    let position = 0;
-    let heightLeft = imgHeight;
-    let page = 1;
+  // First Page
+  pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
+  heightLeft -= pdfHeight;
 
-    while (heightLeft > 0) {
-      if (page > 1) {
-        pdf.addPage();
-      }
-      const yPos = page === 1 ? 0 : heightLeft - imgHeight;
-      pdf.addImage(imgData, "PNG", 0, yPos, imgWidth, imgHeight);
-
-      if (kind === "resume") {
-        pdf.setFontSize(8);
-        pdf.setTextColor(150, 150, 150);
-        pdf.text(
-          "AI Resume & Portfolio Builder · Generated resume using Google GenAI",
-          40,
-          pageHeight - 20
-        );
-      }
-
-      heightLeft -= pageHeight;
-      page += 1;
+  // Handle subsequent pages if content overflows
+  while (heightLeft > 0) {
+    position = heightLeft - imgHeight; // Shift the image up for the next page
+    pdf.addPage();
+    pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
+    
+    // Add a cleaner footer to identify the project source
+    if (kind === "resume") {
+      pdf.setFontSize(8);
+      pdf.setTextColor(170);
+      pdf.text(
+        "AI Resume & Portfolio Builder · Generated using Google GenAI",
+        40,
+        pdfHeight - 20
+      );
     }
+    
+    heightLeft -= pdfHeight;
+  }
 
-    pdf.save(fileName);
-  };
+  pdf.save(fileName);
+};
 
   const downloadPortfolioHtml = () => {
   // Ensure both data and the correct template are available
@@ -241,7 +254,8 @@ export function BuilderPage() {
   const imgTag = formState.header.profileImage 
     ? `<img src="${formState.header.profileImage}" style="width:220px; height:220px; border-radius:50%; border: 3px solid #38bdf8; object-fit:cover; margin:0 auto;" />`
     : `<div style="width:220px; height:220px; border-radius:50%; background:#1e293b; margin:0 auto;"></div>`;
-
+  const resumeLinkUrl = formState.header.resumeLink || "#";
+  const resumeBtnHtml = `<a href="${resumeLinkUrl}" target="_blank" class="resume-btn">View Resume</a>`;
   // 2. Map Social Links
   const socialLinks = [];
   if (formState.header.linkedin) {
@@ -312,8 +326,7 @@ export function BuilderPage() {
     .replaceAll("{{img_tag}}", imgTag)
     .replaceAll("{{year}}", "2026")
     .replaceAll("{{email}}", formState.header.email)
-    .replaceAll("{{resume_link_html}}", `<a href="#" class="resume-btn" style="background: linear-gradient(90deg, #38bdf8 0%, #6366f1 100%); padding: 12px 28px; border-radius: 12px; font-weight: 700; color: white; text-decoration: none; display: inline-block;">View Resume</a>`);
-
+    .replaceAll("{{resume_link_html}}", resumeBtnHtml);
   // 9. Trigger Download
   const blob = new Blob([finalHtml], { type: "text/html" });
   const link = document.createElement("a");
@@ -441,12 +454,6 @@ export function BuilderPage() {
                     >
                       Download PDF
                     </button>
-                    <button
-                      className="secondary-btn"
-                      onClick={() => downloadAsHtml(resumeRef, "resume.html")}
-                    >
-                      Download HTML
-                    </button>
                   </div>
                 )}
               </div>
@@ -538,12 +545,7 @@ export function BuilderPage() {
                     >
                       Download PDF
                     </button>
-                    <button
-                      className="secondary-btn"
-                      onClick={() => downloadAsHtml(coverRef, "cover-letter.html")}
-                    >
-                      Download HTML
-                    </button>
+                    
                   </div>
                 )}
               </div>

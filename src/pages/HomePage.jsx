@@ -1,134 +1,129 @@
 import React, { useEffect } from "react";
+import "./Home.css";
 
 export function HomePage({ onStart }) {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) entry.target.classList.add("show");
+          if (entry.isIntersecting) {
+            entry.target.classList.add("show");
+          }
         });
       },
-      { threshold: 0.15 }
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
     );
 
     document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+    
+    return () => observer.disconnect();
   }, []);
 
   return (
-    <div className="min-vh-100 bg-white overflow-hidden">
+    <div className="forge-container">
       {/* ================= NAVBAR ================= */}
-      <nav className="navbar navbar-light bg-white sticky-top border-bottom px-5 py-3">
-        <div className="w-100 d-flex align-items-center justify-content-between">
-          <div className="fw-black fs-3 d-flex align-items-center">
-            <div className="logo-gradient me-2"></div>
+      <nav className="navbar glass-nav sticky-top px-4 px-md-5 py-3">
+        <div className="container-fluid">
+          <div className="navbar-brand d-flex align-items-center fw-bold fs-4">
+            <div 
+              className="me-2" 
+              style={{
+                width: '34px', 
+                height: '34px', 
+                background: 'linear-gradient(135deg, #2563eb, #7c3aed)', 
+                borderRadius: '10px'
+              }}
+            ></div>
             FORGE<span className="text-primary">AI</span>
           </div>
-
-          <button
-            className="btn btn-primary rounded-pill px-4 fw-bold shadow-sm"
-            onClick={onStart}
-          >
+          <button className="btn btn-futuristic btn-sm px-4" onClick={onStart}>
             Get Started
           </button>
         </div>
       </nav>
 
-      {/* ================= HERO ================= */}
-      <section className="position-relative px-5 py-5 hero-section">
-        <div className="blob blob-1"></div>
-        <div className="blob blob-2"></div>
+      {/* ================= HERO SECTION ================= */}
+      <section className="position-relative pt-5 pb-5 px-4 overflow-hidden">
+        {/* Background Blobs for Futuristic Feel */}
+        <div className="blob float-anim" style={{top: '-150px', right: '-100px'}}></div>
+        <div className="blob float-anim" style={{bottom: '-50px', left: '-150px', animationDelay: '2s'}}></div>
 
-        <div className="text-center reveal mt-5">
-          <div className="pill-badge mb-4">
-            <span className="pill-icon">✨</span> Your AI Career Operating System
+        <div className="container py-5 text-center">
+          <div className="reveal">
+            <div className="pill-badge mb-4">
+              <span className="me-2">✨</span> Next-Gen Career Infrastructure
+            </div>
+            <h1 className="display-2 hero-title mb-4">
+              Build your professional <br />
+              <span className="text-gradient">Identity with AI</span>
+            </h1>
+            <p className="lead text-secondary mx-auto mb-5 mt-4" style={{ maxWidth: "600px", fontWeight: "400" }}>
+              ForgeAI streamlines your job search by generating high-impact 
+              portfolios and contextual documents designed for the modern era.
+            </p>
+            <div className="d-flex justify-content-center">
+              <button className="btn btn-futuristic py-3 px-5 shadow-lg" onClick={onStart}>
+                Start Building Your Profile —
+              </button>
+            </div>
           </div>
-
-          <h1 className="display-3 fw-black mb-4">
-            Build Job-Ready Profiles
-            <br />
-            <span className="text-gradient-flow">
-              With Precision AI
-            </span>
-          </h1>
-
-          <p className="fs-5 text-muted mx-auto mb-5" style={{ maxWidth: "720px" }}>
-            ForgeAI helps you generate resumes, portfolios, and cover letters
-            engineered for modern hiring systems — faster, cleaner, and smarter.
-          </p>
-
-          <div className="d-flex justify-content-center mt-4">
-            <button
-              className="btn btn-gradient-primary rounded-pill px-5 py-3 fw-black shadow-lg"
-              onClick={onStart}
-            >
-              Start Building →
-            </button>
-          </div>
-        </div>
-
-        {/* Feature Chips */}
-        <div className="d-flex flex-wrap justify-content-center gap-3 mt-5 reveal">
-          <span className="tool-chip">AI Resume Engine</span>
-          <span className="tool-chip">ATS Optimization</span>
-          <span className="tool-chip">Portfolio Generator</span>
-          <span className="tool-chip">Cover Letter AI</span>
         </div>
       </section>
 
-      {/* ================= FEATURES ================= */}
-      <section className="bg-light-soft px-5 py-5">
-        <div className="text-center mb-5 reveal">
-          <h2 className="fw-black display-5">
-            Everything You Need to Get Hired
-          </h2>
-          <p className="text-muted fs-5">
-            Designed for students, developers, and professionals.
-          </p>
-        </div>
+      {/* ================= FEATURES SECTION ================= */}
+      <section className="py-5 px-4 bg-white border-top">
+        <div className="container py-5">
+          <div className="text-center mb-5 reveal">
+            <h2 className="fw-bold display-5 mb-3">Designed for Growth</h2>
+            <p className="text-muted fs-5">Smarter tools for your career journey.</p>
+          </div>
 
-        <div className="row g-4 justify-content-center">
-          {[
-            {
-              icon: "📄",
-              title: "ATS-Optimized Resumes",
-              desc: "Generate resumes aligned with real ATS scoring patterns and recruiter expectations."
-            },
-            {
-              icon: "🌐",
-              title: "AI Portfolio Builder",
-              desc: "Convert your projects into clean, responsive portfolio websites instantly."
-            },
-            {
-              icon: "✍️",
-              title: "Contextual Cover Letters",
-              desc: "Personalized cover letters tuned to the exact job description."
-            },
-            {
-              icon: "⚡",
-              title: "Rapid Iteration",
-              desc: "Edit, regenerate, and tailor documents in seconds."
-            }
-          ].map((item, i) => (
-            <div key={i} className="col-xl-3 col-lg-4 col-md-6 reveal">
-              <div className="feature-card h-100 shadow-sm">
-                <div className="feature-icon mb-3">{item.icon}</div>
-                <h4 className="fw-bold mb-2">{item.title}</h4>
-                <p className="text-muted small">{item.desc}</p>
+          <div className="row g-4 justify-content-center">
+            {[
+              {
+                icon: "🌐",
+                title: "AI Portfolio Builder",
+                desc: "Convert your technical projects into a clean, responsive portfolio website instantly."
+              },
+              {
+                icon: "✍️",
+                title: "Contextual Cover Letters",
+                desc: "AI-generated letters tuned specifically to the job description and your unique voice."
+              },
+              {
+                icon: "⚡",
+                title: "Rapid Iteration",
+                desc: "Adapt, edit, and regenerate your professional documents in seconds, not hours."
+              }
+            ].map((item, i) => (
+              <div key={i} className="col-md-6 col-lg-4 reveal">
+                <div className="feature-card">
+                  <div className="feature-icon-wrapper">
+                    {item.icon}
+                  </div>
+                  <h5 className="fw-bold mb-3">{item.title}</h5>
+                  <p className="text-muted small lh-lg mb-0">{item.desc}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
       {/* ================= FOOTER ================= */}
-      <footer className="border-top py-5 px-5 bg-white">
-        <div className="text-center">
-          <p className="fw-bold text-muted small mb-2">
-            Built for modern hiring workflows
-          </p>
-          <p className="text-muted small">
-            © 2026 ForgeAI · AI-Powered Career Infrastructure
-          </p>
+      <footer className="py-5 px-4 bg-white border-top mt-5">
+        <div className="container">
+          <div className="row align-items-center">
+            <div className="col-md-6 text-center text-md-start mb-4 mb-md-0">
+              <div className="fw-bold fs-5 mb-2">FORGE<span className="text-primary">AI</span></div>
+              <p className="text-muted small mb-0">Elevating the standards of professional applications.</p>
+            </div>
+            <div className="col-md-6 text-center text-md-end">
+              <p className="text-muted small mb-0">
+                © 2026 ForgeAI · Intelligence for the modern workforce.
+              </p>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
